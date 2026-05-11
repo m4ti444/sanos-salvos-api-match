@@ -28,6 +28,9 @@ class MatchPublisher:
         self._channel: Optional[aio_pika.Channel] = None
 
     async def connect(self):
+        if not rabbitmq_enabled():
+            logger.info("RabbitMQ disabled; skipping connection")
+            return
         try:
             self._connection = await aio_pika.connect_robust(RABBITMQ_URL)
             self._channel = await self._connection.channel()
