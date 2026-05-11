@@ -1,0 +1,20 @@
+﻿services:
+  - type: web
+    name: sanos-salvos-api-match
+    runtime: docker
+    plan: free
+    branch: main
+    healthCheckPath: /api/matches/
+    envVars:
+      - key: POSTGRES_USER
+        sync: false
+      - key: POSTGRES_PASSWORD
+        sync: false
+      - key: POSTGRES_HOST
+        sync: false
+      - key: POSTGRES_PORT
+        value: 5432
+      - key: POSTGRES_DB
+        sync: false
+      - key: RABBITMQ_URL
+        sync: false
