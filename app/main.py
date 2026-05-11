@@ -10,12 +10,23 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from sqlalchemy import text
+
 from app.api.routes import router
+from app.config import Base, engine
+from app.models import match
 from app.events.consumer import start_consumer
 from app.events.publisher import publisher
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("match-service")
+
+async def init_database():
+    """Create service schema and tables when running in a fresh database."""
+    async with engine.begin() as conn:
+        await conn.execute(text("CREATE SCHEMA IF NOT EXISTS match_service"))
+        await conn.run_sync(Base.metadata.create_all)
+
 
 
 from app.config import engine, Base
