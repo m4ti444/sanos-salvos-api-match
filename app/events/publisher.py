@@ -10,6 +10,10 @@ from typing import Optional
 
 from app.config import RABBITMQ_URL
 
+
+def rabbitmq_enabled():
+    return RABBITMQ_URL and RABBITMQ_URL.lower() not in {"disabled", "none", "off"}
+
 logger = logging.getLogger("match.publisher")
 
 EXCHANGE_NAME = "sanos_y_salvos"

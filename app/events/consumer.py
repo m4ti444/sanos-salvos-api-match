@@ -9,6 +9,10 @@ import asyncio
 import aio_pika
 
 from app.config import RABBITMQ_URL
+
+
+def rabbitmq_enabled():
+    return RABBITMQ_URL and RABBITMQ_URL.lower() not in {"disabled", "none", "off"}
 from app.services.match_engine import MatchEngine
 from app.events.publisher import publisher
 
@@ -40,6 +44,9 @@ async def on_message(message: aio_pika.IncomingMessage):
 
 async def start_consumer():
     """Start consuming pet.reported events from RabbitMQ."""
+    if not rabbitmq_enabled():
+        logger.info("RabbitMQ disabled; consumer not started")
+        return
     try:
         connection = await aio_pika.connect_robust(RABBITMQ_URL)
         channel = await connection.channel()
